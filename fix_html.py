@@ -12,23 +12,23 @@ def fix_css(page_data):
     from main import crawl_path, root_path
     global css_index
     global css_dict
-    
+
     try:
         css = re.search('<link rel="stylesheet" type="text/css" href="(.*?)" />', page_data).group(1)
     except:
         print "Failed to find css reference"
         return page_data
-    
+
     if not css.startswith("http"):
         return page_data
-    
+
     if css not in css_dict.keys():
         local_file = "Combined_{}.css".format(css_index)
         css_index += 1
         print "Found new CSS, downloading. index={}".format(css_index)
         urllib.urlretrieve(css, os.path.join(root_path, local_file))
         css_dict[css] = local_file
-        
+
     page_data = re.sub('<link rel="stylesheet" type="text/css" href="(.*?)" />', '<link rel="stylesheet" type="text/css" href="{}" />'.format(css_dict[css]), page_data, count=1)
     return page_data
 
@@ -76,7 +76,7 @@ def fix_html(path):
     page_data = re.sub("""<div class="lw_vs">""", """<div id="ratingCounter" style="display:block"></div><div class="lw_vs">""", page_data)
     page_data = fix_css(page_data)
     page_data = fix_imgs(page_data)
-    
+
     html_path = path.replace("(v=vs.85)", "").replace(".aspx", ".html")
     open(os.path.join(root_path, html_path), "wb").write(page_data)
 
@@ -89,7 +89,7 @@ def fix_htmls():
     print "Patching HTML files"
     for path in files_to_fix:
         fix_html(path)
-        if current % precent == 0:
+        if precent != 0 and current % precent == 0:
             print "\r    \r%d%%" % (float(current) / float(total) * 100.0),
             sys.stdout.flush()
         current += 1

@@ -16,11 +16,10 @@ crawl_path = "download_folder/"
 
 def crawl():
     page_getter = PageGetter(base_url)
-    
-    urls_to_visit = ["aa904962.aspx"]
+    urls_to_visit = ["ee663300.aspx"]   # MSDN page: "Windows desktop app development"
     known_urls = set(urls_to_visit)   # URLs we visited or will visit
     visited_count = 0
-    
+
     while len(urls_to_visit) > 0:
         cur_url = urls_to_visit.pop(0)
         local_url = os.path.join(crawl_path, cur_url)
@@ -39,7 +38,7 @@ def crawl():
         urls_to_visit.extend(list(new_urls))
         known_urls.update(new_urls)
     print "Done crawling. Crawled %d pages" % (visited_count,)
-    
+
 def main():
     if not os.path.exists(root_path):
         os.makedirs(root_path)
@@ -50,9 +49,8 @@ def main():
     create_tokens("{}/Contents/Resources/Tokens.xml".format(docset_root))
     shutil.copy("static/icon.png", "{}/".format(docset_root))
     shutil.copy("static/Info.plist", "{}/Contents/".format(docset_root))
-    shutil.copy("static/Nodes.xml", "{}/Contents/Resources/".format(docset_root))    
+    shutil.copy("static/Nodes.xml", "{}/Contents/Resources/".format(docset_root))
     os.system("/Applications/Xcode.app/Contents/Developer/usr/bin/docsetutil index {}".format(docset_root))
 
 if __name__ == "__main__":
     main()
-    
