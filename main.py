@@ -9,14 +9,15 @@ import sys
 
 # documentation for creating docsets for Dash: http://kapeli.com/docsets/
 
-base_url = "http://msdn.microsoft.com/en-us/library/windows/desktop/"
+base_url = "https://msdn.microsoft.com/en-us/library/"
 docset_root = "MSDN.docset"
 root_path = "{}/Contents/Resources/Documents/docs/".format(docset_root)
 crawl_path = "download_folder/"
+main_page = "ee663300.aspx"   # MSDN page: "Windows desktop app development"
 
 def crawl():
     page_getter = PageGetter(base_url)
-    urls_to_visit = ["ee663300.aspx"]   # MSDN page: "Windows desktop app development"
+    urls_to_visit = [main_page]
     known_urls = set(urls_to_visit)   # URLs we visited or will visit
     visited_count = 0
 
@@ -33,7 +34,7 @@ def crawl():
             cur_url_html = page_getter.urlretrieve(remote_url, local_url)
             print
         visited_count += 1
-        new_urls = re.findall("(?:href|src)=['\"].*?en-us/library/windows/desktop/(\w\w\d{6}\(v=vs.85\).aspx)['\"]", cur_url_html, re.I)
+        new_urls = re.findall("(?:href|src)=['\"].*?en-us/library/(\w\w\d{6}\(v=vs.85\).aspx)['\"]", cur_url_html, re.I)
         new_urls = set(url for url in new_urls if url not in known_urls)
         urls_to_visit.extend(list(new_urls))
         known_urls.update(new_urls)
